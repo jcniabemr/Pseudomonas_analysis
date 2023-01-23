@@ -18,7 +18,7 @@ cp -r $InfileR $WORK_DIR
 cd $WORK_DIR	
 
 fastqc *.gz
-unzip *.zip
+unzip \*.zip
 
 cp -r $WORK_DIR/*fastqc $OutDir
 rm -r $WORK_DIR
