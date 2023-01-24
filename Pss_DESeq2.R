@@ -1,6 +1,6 @@
 #!/usr/bin/env R
-#Deseq2 analysis Pss count data for Andrea
- 
+#Deseq2 analysis Pss count data 
+  
 
 #Set libs
 
@@ -10,16 +10,12 @@ library(ggplot2)
 library(ggrepel)
 library(pheatmap)
 library(dplyr)
-setwd("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/quant_files")
+setwd("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss")
 
 #Create tx2gene table 
 
-gene.t <- paste0("g", 1:5211)
-gene.t <- as.data.frame(gene.t)
-gene <- paste0("g", 1:5211)
-gene <- as.data.frame(gene)
-tx2gene <- cbind(gene.t, gene)
-colnames(tx2gene) <- c("Name", "Name")
+tx2gene <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/tx2gene.txt", sep = "\t")
+colnames(tx2gene) <- c("TXNAME", "GENEID")
 
 #Import data
 
@@ -118,6 +114,22 @@ save_pheatmap_pdf <- function(x, filename, width=3, height=25) {
   dev.off()
 }
 save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Heatmap_H_l2FC.pdf")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

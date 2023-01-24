@@ -13,6 +13,7 @@ outdir=$2
 #Script to run checkM on genomes 
 
 checkm lineage_wf \
+-t 16 \
 -x .fna \
 $infile_dir \
 $outdir
