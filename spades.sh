@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #SBATCH -J SPAdes
 #SBATCH --partition=short 
-#SBATCH --mem=4G
-#SBATCH --cpus-per-task=2
+#SBATCH --mem=15G
+#SBATCH --cpus-per-task=4
 
 
 ########################################################################
@@ -41,7 +41,7 @@ cp $R2 $WorkDir/$R_Read
 $SpadesDir/spades.py -k 21,33,55,77,99,127 -m 200 --phred-offset 33 --careful -1 $WorkDir/$F_Read -2 $WorkDir/$R_Read -t 30  -o $WorkDir/. --cov-cutoff "$Cutoff"
 
 mkdir -p $WorkDir/filtered_contigs
-FilterDir=/home/jconnell/git_repos/niab_repos/pipeline_canker_cherry/cherry_canker_pipeline
+FilterDir=/home/jconnell/johnc/git_repos/niab_repos/pipeline_canker_cherry/cherry_canker_pipeline
 $FilterDir/filter_abyss_contigs.py $WorkDir/scaffolds.fasta 500 > $WorkDir/filtered_contigs/contigs_min_500bp.fasta
 
 rm $WorkDir/$F_Read
