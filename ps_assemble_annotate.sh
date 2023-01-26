@@ -56,24 +56,39 @@
 
 ####Assemble genomes with SPAdes
 # for strain in 241278_241370 241185_241277 241464_241556 241371_241463; do
-#   a=$(ls -l /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain} | awk '{print $9}')
-#   for x in $a; do
-#       StrainPath=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data
-#       F_Read=$(ls $StrainPath/${strain}/${x}/trimmed_reads/F/*_1_*)
-#       R_Read=$(ls $StrainPath/${strain}/${x}/trimmed_reads/R/*_2_*)
-#       OutDir=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain}/${x}/spades/
-#       mkdir -p $OutDir
-#       Jobs=$(squeue -u ${USER} --noheader --array | wc -l)
-#       while [ $Jobs -gt 20 ]; do
-#         sleep 30s
-#         printf "."
-#         Jobs=$(squeue -u ${USER} --noheader --array | wc -l)
-#       done
-#       printf "\n"
-#       ProgDir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
-#       sbatch $ProgDir/spades.sh $F_Read $R_Read $OutDir correct 10
+
+for strain in 241371_241463; do
+  a=$(ls -l /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain} | awk '{print $9}')
+  for x in $a; do
+      StrainPath=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data
+      F_Read=$(ls $StrainPath/${strain}/${x}/trimmed_reads/F/*_1_*)
+      R_Read=$(ls $StrainPath/${strain}/${x}/trimmed_reads/R/*_2_*)
+      OutDir=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain}/${x}/spades/
+      mkdir -p $OutDir
+      Jobs=$(squeue -u ${USER} --noheader --array | wc -l)
+      while [ $Jobs -gt 50 ]; do
+        sleep 30s
+        printf "."
+        Jobs=$(squeue -u ${USER} --noheader --array | wc -l)
+      done
+      printf "\n"
+      ProgDir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
+      sbatch $ProgDir/spades.sh $F_Read $R_Read $OutDir correct 10
+  done
+done 
+
+####Rename genomes by stain name 
+# for x in 241278_241370 241185_241277 241464_241556 241371_241463; do
+#   a=$(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${x})
+#   for y in $a; do
+#     file=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${x}/${y}/spades/filtered_contigs/contigs_min_500bp.fasta
+#     mkdir -p ${file}../renamed_files_contigs
+#     cp ${file} ${file}../renamed_files_contigs/"$y"_contigs_unmasked.fa
 #   done
 # done 
+
+
+
 
 ####Run checkM on control Ps genomes 
 # data=$(cat /home/jconnell/pseudomonas/2795_busco.txt | sed 's/%//g' | awk '($2>=99) {print $1}')
@@ -87,19 +102,28 @@
 # scriptdir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
 # sbatch $scriptdir/checkM.sh $temp_files $outdir
 
+# ####Run BUSCO on assembled query genomes
+# for strain in 241278_241370 241185_241277 241464_241556 241371_241463; do
+#       a=$(ls -l /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain} | awk '{print $9}')
+#       for x in $a; do 
+#         Assembly=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain}/${x}/spades/renamed_files_contigs
+#         ProgDir=/home/jconnell/git_repos/emr_repos/Fv_C-variants/Busco
+#         b=$(basname $Assembly _contigs_unmasked.fasta)
+#         BuscoDB=/home/jconnell/pseudomonas/busco_db/bacteria_odb10
+#         OutDir=/home/jconnell/pseudomonas/sequenced_genome_analysis/busco/$b
+#         mkdir -p $OutDir
+#         sbatch $ProgDir/run_busco.sh $Assembly $BuscoDB $OutDir $strain
+#       done
+# done 
 
-
-for strain in 241278_241370 241185_241277 241464_241556 241371_241463; do
-  a=$(ls -l /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain} | awk '{print $9}')
-  for x in $a; do
-      StrainPath=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data
-      F_Read=$(ls $StrainPath/${strain}/${x}/trimmed_reads/F/*_1_*)
-      R_Read=$(ls $StrainPath/${strain}/${x}/trimmed_reads/R/*_2_*)
-      OutDir=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${strain}/${x}/spades/
-      mkdir -p $OutDir
-      ProgDir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
-      sbatch $ProgDir/spades.sh $F_Read $R_Read $OutDir correct 10
-  done
-done 
-
-
+# ####Run checkM on query Ps genomes with busco filter 
+# # data=$(cat /home/jconnell/pseudomonas/2795_busco.txt | sed 's/%//g' | awk '($2>=99) {print $1}')
+# # files=/home/jconnell/pseudomonas/Ps_genomes_2795/ncbi_dataset/data
+# # temp_files=/mnt/shared/scratch/jconnell/temp_checkm_2795
+# # outdir=/home/jconnell/pseudomonas/Ps_genomes_2795/ncbi_dataset/checkM
+# # mkdir -p $temp_files $outdir
+# # for x in $(echo $data); do
+# #  cp --symbolic ${files}/${x}/*.fna $temp_files
+# # done 
+# # scriptdir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
+# # sbatch $scriptdir/checkM.sh $temp_files $outdir
