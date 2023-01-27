@@ -24,12 +24,12 @@ Assembly=$1
 DatabaseOpt=$2
 OutDir=$3
 
-Filename=$(basename $Assembly .fna)
+Filename=$(basename $Assembly .fa)
 #outname="${Filename%.*}"
 #extension="${filename##*.}"
 
 
-WorkDir=/home/jconnell/pseudomonas/${SLURM_JOB_USER}_${SLURM_JOBID}
+WorkDir=/mnt/shared/scratch/jconnell/${SLURM_JOB_USER}_${SLURM_JOBID}
 mkdir -p $WorkDir
 
 

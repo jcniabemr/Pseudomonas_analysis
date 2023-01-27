@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH -J FastQ-mcf
-#SBATCH --partition=medium
+#SBATCH --partition=long
 #SBATCH --mem=10G
 #SBATCH --cpus-per-task=10
 
