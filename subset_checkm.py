@@ -13,11 +13,11 @@ outfile = open(args.o, 'w')
 
 for x in infile:
 	x = x.replace("\n","")
-	x = x.split("\t")
-	if float(x[1]) >= 95:
-		if float(x[2]) <= 5:
-			if int(x[6]) >= 40000:
-				data = x[0:]
+	x = x.split(",")
+	if float(x[26]) >= 95:
+		if float(x[28]) <= 5:
+			if int(x[58]) >= 40000:
+				data = x[0:58]
 				out = "\t".join(data)
 				outfile.write(out + "\n")
 infile.close()

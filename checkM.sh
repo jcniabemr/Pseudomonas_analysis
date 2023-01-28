@@ -14,7 +14,7 @@ outdir=$2
 
 checkm lineage_wf \
 -t 16 \
--x .fna \
+-x .fa \
 $infile_dir \
 $outdir
 

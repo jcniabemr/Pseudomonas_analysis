@@ -46,6 +46,6 @@ $FilterDir/filter_abyss_contigs.py $WorkDir/scaffolds.fasta 500 > $WorkDir/filte
 
 rm $WorkDir/$F_Read
 rm $WorkDir/$R_Read
-mv $WorkDir/* $OutDir
+cp -r $WorkDir/* $OutDir
 rm -r $WorkDir
 
