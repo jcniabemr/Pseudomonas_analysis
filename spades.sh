@@ -27,7 +27,7 @@ if [ $5 ]; then
   Cutoff=$5
 fi
 
-WorkDir=/mnt/shared/scratch/jconnell/${SLURM_JOB_USER}_${SLURM_JOB_ID}
+WorkDir=/home/jconnell/pseudomonas/${SLURM_JOB_USER}_${SLURM_JOB_ID}
 mkdir -p $WorkDir
 
 SpadesDir=/home/jconnell/miniconda3/pkgs/spades-3.13.0-0/share/spades-3.13.0-0/bin
@@ -46,6 +46,6 @@ $FilterDir/filter_abyss_contigs.py $WorkDir/scaffolds.fasta 500 > $WorkDir/filte
 
 rm $WorkDir/$F_Read
 rm $WorkDir/$R_Read
-cp -r $WorkDir/* $OutDir
+mv $WorkDir/* $OutDir
 rm -r $WorkDir
 
