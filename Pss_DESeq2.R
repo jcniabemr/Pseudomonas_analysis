@@ -1,6 +1,4 @@
-#!/usr/bin/env R
-#Deseq2 analysis Pss count data 
-  
+#Deseq2 analysis Pss count data  
 
 #Set libs
 
@@ -10,16 +8,16 @@ library(ggplot2)
 library(ggrepel)
 library(pheatmap)
 library(dplyr)
-setwd("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss")
+setwd("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss_deseq")
 
 #Create tx2gene table 
 
-tx2gene <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/tx2gene.txt", sep = "\t")
+tx2gene <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss_deseq/tx2gene.txt", sep = "\t")
 colnames(tx2gene) <- c("TXNAME", "GENEID")
 
 #Import data
 
-txi.reps <- tximport(paste(list.dirs("./", full.names=T,recursive=F),"/quant.sf",sep=""),type="salmon",tx2gene=tx2gene,txOut=T)
+txi.reps <- tximport(paste(list.dirs("./Pss", full.names=T,recursive=F),"/quant.sf",sep=""),type="salmon",tx2gene=tx2gene,txOut=T)
 mysamples <- list.dirs("./",full.names=F,recursive=F)
 txi.genes <- summarizeToGene(txi.reps,tx2gene)
 invisible(sapply(seq(1,3), function(i) {colnames(txi.genes[[i]])<<-mysamples}))
@@ -116,10 +114,23 @@ save_pheatmap_pdf <- function(x, filename, width=3, height=25) {
 save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Heatmap_H_l2FC.pdf")
 
 
+#Plot heatmap for effectors only 
 
-
-
-
+effector_data <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss_deseq/PSS_significantly_upregulated_effectors.txt")
+subset <- effector_data[3]
+colnames(subset) <- ("L2FC")
+row.names(subset) <- effector_data[,1]
+sortedhlfc <- subset[order(subset$L2FC), , drop = FALSE]
+heatmapH <- pheatmap(sortedhlfc, cluster_rows=FALSE, cluster_cols=FALSE, color=colorRampPalette(c("orange", "red"))(50), main = "Pss high l2FC") 
+save_pheatmap_pdf <- function(x, filename, width=6, height=10) {
+  stopifnot(!missing(x))
+  stopifnot(!missing(filename))
+  pdf(filename, width=width, height=height)
+  grid::grid.newpage()
+  grid::grid.draw(x$gtable)
+  dev.off()
+}
+save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/effectors_in_Pss.pdf")
 
 
 
