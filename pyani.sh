@@ -6,13 +6,12 @@
 
 #Calculate ANI for a set of genome assemblies 
 
-
-input_files=/home/jconnell/pseudomonas/sequenced_genome_analysis/assembled_genomes/
-result_file=/home/jconnell/pseudomonas/results_ani_seq_genomes
+genome_dir=$1
+outdir=$2
 
 average_nucleotide_identity.py \
--i $input_files \
--o $result_file \
+-i $genome_dir \
+-o $outdir \
 -m ANIm \
 -g 
 
