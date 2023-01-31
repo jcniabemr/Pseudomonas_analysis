@@ -257,25 +257,29 @@
 # done
 
 ####Filter Blast data 
-files=$(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results)
-for x in ${files}; do
-	data=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results/${x}/*.txt
-	cat ${data} | sed -n 21p | awk '{print $2" "$3}' >> genus_species
-	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 1p | awk '{print $3}' >> bitt_score
-	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 2p |  awk '{print $3$4}' | sed 's/,//g' >> identities
-	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 2p | awk '{print $7$8}' >> gaps 
-	name=$(basename ${x} .txt_result.txt)
-	echo ${name} >> filenames
-done 
-paste filenames genus_species bitt_score identities gaps > combined_data 
-echo -e "filenames""\t""blast species""\t""bitt score""\t""identities""\t""gaps" > blast_results_49_56_63_70_77.txt
-cat combined_data >> blast_results_49_56_63_70_77.txt
-rm genus_species bitt_score identities gaps filenames combined_data
+# files=$(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results)
+# for x in ${files}; do
+# 	data=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results/${x}/*.txt
+# 	cat ${data} | sed -n 21p | awk '{print $2" "$3}' >> genus_species
+# 	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 1p | awk '{print $3}' >> bitt_score
+# 	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 2p |  awk '{print $3$4}' | sed 's/,//g' >> identities
+# 	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 2p | awk '{print $7$8}' >> gaps 
+# 	name=$(basename ${x} .txt_result.txt)
+# 	echo ${name} >> filenames
+# done 
+# paste filenames genus_species bitt_score identities gaps > combined_data 
+# echo -e "filenames""\t""blast species""\t""bitt score""\t""identities""\t""gaps" > blast_results_49_56_63_70_77.txt
+# cat combined_data >> blast_results_49_56_63_70_77.txt
+# rm genus_species bitt_score identities gaps filenames combined_data
 
 ####Filter Microbes NG data 
-for x in 77.csv 70.csv 63.csv 56.csv 49.csv; do 
-	cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/${x} | sed 's/,/\t/g' | awk '{print $1"\t"$8" "$9"\t"$12" "$13" "$14}' | sed 's/_.*.report//' > subset_data
-done 
+# for x in 77.csv 70.csv 63.csv 56.csv 49.csv; do 
+# 	cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/${x} | sed 's/,/\t/g' | awk '{print $1"\t"$8" "$9"\t"$12" "$13" "$14}' | sed 's/_.*.report//' | grep -v "Sample" >> subset_data
+# done 
+####Data to remove 
+# for x in 241394 241396 241460 241555 241609 241416 241456 241254 241350 241340 241262 241264 241318 241584 241623 241371 241330 241434 241449 241516 241608 241618 241635; do 
+# 	cat blast_results_49_56_63_70_77.txt | grep -v $x > blast_results_49_56_63_70_77_filter.txt
+# done 
 
 # #### Run pyani on reference genomes 
 # filter=$(cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/comp_cont_n50_filter_refgenomes.txt | awk '{print $1}' | cut -d "_" -f1-2)
