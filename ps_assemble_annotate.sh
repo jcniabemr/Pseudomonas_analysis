@@ -235,25 +235,47 @@
 # sbatch $scriptdir/checkM.sh $temp_files $outdir
 
 ####Blast query genomes - set up master file for all genomes 
-for x in 241278_241370 241185_241277 241464_241556 241371_241463 241557_241649; do
-  for y in $(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${x}); do
-    genomes=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${x}/${y}/spades/filtered_contigs/renamed_files_contigs/ncbi_contigs/*.fa
-    name=$(basename $y _contigs_unmasked.fa)
-    outfile=/home/jconnell/pseudomonas/blastmaster
-    echo ">"${name} >> ${outfile}
-    samtools faidx ${genomes} contig_1 >> ${outfile}
-  done 
-done 
-cat ${outfile} | grep -v ">contig_1" > /home/jconnell/pseudomonas/blastmaster.txt
-rm /home/jconnell/pseudomonas/blastmaster
+# for x in 241278_241370 241185_241277 241464_241556 241371_241463 241557_241649; do
+#   for y in $(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${x}); do
+#     genomes=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/${x}/${y}/spades/filtered_contigs/renamed_files_contigs/ncbi_contigs/*.fa
+#     name=$(basename $y _contigs_unmasked.fa)
+#     outfile=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_lists
+#     samtools faidx ${genomes} contig_1 > ${outfile}/"$name".txt
+#   done 
+# done 
 
 ####Run Blastn
-data=/home/jconnell/pseudomonas/blastmaster.txt
-outdir=/home/jconnell/blast_query 
-mkdir -p $outdir
-blastdb=/home/jconnell/niab/pseudomonas/blast/prokaryote/ref_prok_rep_genomes
-progdir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
-sbatch $progdir/blast.sh $data $outdir $blastdb
+# files=$(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_lists)
+# for x in $files; do 
+# 	data=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_lists/${x}
+# 	name=$(basename ${x} .txt)
+# 	outdir=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results/${name}
+#     mkdir -p $outdir
+# 	blastdb=/home/jconnell/niab/pseudomonas/blast/prokaryote/ref_prok_rep_genomes
+# 	progdir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
+# 	sbatch $progdir/blast.sh $data $outdir $blastdb
+# done
+
+####Filter Blast data 
+files=$(ls /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results)
+for x in ${files}; do
+	data=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/blast_results/${x}/*.txt
+	cat ${data} | sed -n 21p | awk '{print $2" "$3}' >> genus_species
+	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 1p | awk '{print $3}' >> bitt_score
+	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 2p |  awk '{print $3$4}' | sed 's/,//g' >> identities
+	cat ${data} | grep -A3 "Score =" | head -n 3 | sed -n 2p | awk '{print $7$8}' >> gaps 
+	name=$(basename ${x} .txt_result.txt)
+	echo ${name} >> filenames
+done 
+paste filenames genus_species bitt_score identities gaps > combined_data 
+echo -e "filenames""\t""blast species""\t""bitt score""\t""identities""\t""gaps" > blast_results_49_56_63_70_77.txt
+cat combined_data >> blast_results_49_56_63_70_77.txt
+rm genus_species bitt_score identities gaps filenames combined_data
+
+####Filter Microbes NG data 
+for x in 77.csv 70.csv 63.csv 56.csv 49.csv; do 
+	cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/${x} | sed 's/,/\t/g' | awk '{print $1"\t"$8" "$9"\t"$12" "$13" "$14}' | sed 's/_.*.report//' > subset_data
+done 
 
 # #### Run pyani on reference genomes 
 # filter=$(cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/comp_cont_n50_filter_refgenomes.txt | awk '{print $1}' | cut -d "_" -f1-2)

@@ -131,18 +131,3 @@ save_pheatmap_pdf <- function(x, filename, width=6, height=10) {
   dev.off()
 }
 save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/effectors_in_Pss.pdf")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

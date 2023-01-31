@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #SBATCH -J blast
 #SBATCH -p long 
-#SBATCH --mem=50G
-#SBATCH --cpus-per-task=8
+#SBATCH --mem=15G
+#SBATCH --cpus-per-task=4
 
 
 infile=$1
@@ -13,16 +13,13 @@ db=$3
 WorkDir=/mnt/shared/scratch/jconnell/${SLURM_JOB_USER}_${SLURM_JOBID}
 mkdir -p $WorkDir
 
-
 cp -s $infile $WorkDir
 cd $WorkDir
-
-name=$(basename $infile .fa)
+name=$(basename $infile .txt)
 
 blastn -query $infile -db $db -out "$name"_result.txt #-outfmt 6
 
 cp -r "$name"_result.txt $outdir
-
 rm -r $WorkDir
 
 
