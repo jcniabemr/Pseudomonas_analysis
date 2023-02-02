@@ -224,3 +224,18 @@ es t3es_pss_hitstable.txt | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2
 for x in $(cat effectors_in_pss.txt | grep -Eo '[0-9]+$' | awk '{print "g" $0}'); do
     cat PSS_up_data.txt | grep -w $x > results_up.txt
 done 
+
+
+####Make a unique table of effectors for each CDS hit with blast %
+#Create unique CDS list 
+es t3es_pss_hitstable.txt  | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2}' | grep -v "Sub" > unique_cds_all
+#Subset effector hits by cds taking unique + %match + match lenth
+for x in $(cat unique_cds_all); do 
+    cat t3es_pss_hitstable.txt | grep $x | sort | uniq -c | awk '{print $2" "$4"% "$5"bp"}' >> "$x"_unique_hits.txt
+done
+#Begine to creat table 
+es unique_cds_all | paste -s > table.txt
+#Paste all data togetger in order of unique_cds_all
+paste $(for x in $(cat unique_cds_all); do echo "$x"_unique_hits.txt; done) >> data 
+#Combine all data
+cat data >> table.txt

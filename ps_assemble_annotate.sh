@@ -300,4 +300,4 @@
 # outdir=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/49_56_63_70_77_checkM/storage
 # python $progdir/subset_checkm.py -i $data -po $outdir/passing_filter.txt -fo $outdir/failing_fiter.txt
 
-
+####Rename datatable strain name with readname+strainname 
