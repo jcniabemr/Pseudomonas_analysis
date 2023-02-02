@@ -167,7 +167,7 @@
 
 
 
-#R2leaf Done 
+#R2leaf  
 for strain in RNA_4 RNA_6 RNA_10_2607  RNA_17 RNA_23 RNA_24; do 
 Transcriptome=/home/jconnell/niab/andrea_rna_seq/ref_genomes/GCF_002905795.2/ncbi_dataset/data/GCF_002905795.2/cds_from_genomic.fna
     for RawData in /home/jconnell/niab/andrea_rna_seq/decontaminated_reads/$strain; do
