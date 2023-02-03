@@ -113,3 +113,20 @@ save_pheatmap_pdf <- function(x, filename, width=3, height=25) {
 }
 save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Heatmap_H_l2FC_R15300.pdf")
 
+#Plot heatmap for effectors only 
+
+effector_data <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss_deseq/PSS_significantly_upregulated_effectors.txt")
+subset <- effector_data[3]
+colnames(subset) <- ("L2FC")
+row.names(subset) <- effector_data[,1]
+sortedhlfc <- subset[order(subset$L2FC), , drop = FALSE]
+heatmapH <- pheatmap(sortedhlfc, cluster_rows=FALSE, cluster_cols=FALSE, color=colorRampPalette(c("orange", "red"))(50), main = "Pss high l2FC") 
+save_pheatmap_pdf <- function(x, filename, width=6, height=10) {
+  stopifnot(!missing(x))
+  stopifnot(!missing(filename))
+  pdf(filename, width=width, height=height)
+  grid::grid.newpage()
+  grid::grid.draw(x$gtable)
+  dev.off()
+}
+save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/effectors_in_Pss.pdf")

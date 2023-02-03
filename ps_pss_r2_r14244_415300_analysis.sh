@@ -167,7 +167,7 @@
 
 
 
-#R2leaf  
+#R2leaf Done 
 for strain in RNA_4 RNA_6 RNA_10_2607  RNA_17 RNA_23 RNA_24; do 
 Transcriptome=/home/jconnell/niab/andrea_rna_seq/ref_genomes/GCF_002905795.2/ncbi_dataset/data/GCF_002905795.2/cds_from_genomic.fna
     for RawData in /home/jconnell/niab/andrea_rna_seq/decontaminated_reads/$strain; do
@@ -214,28 +214,27 @@ done
 #     done
 # done
 
-
 ####Blast effectors agaisnt genome and extract from DEG data 
+#Create blast nucelotide database of CDS file 
+makeblastdb -in cds_from_genomic.fna -parse_seqids -blastdb_version 5  -out R15300_DB/R15300 -dbtype nucl 
+#Run blast of type 3 effectors against database 
+tblastn -query t3es.fasta -db R15300_DB/R15300 -out t3es_R15300_hits_table.txt -evalue 1e-30 -outfmt 6
 
-tblastn -query t3es.fasta -db db2 -out t3es_pss_hits_table.txt -evalue 1e-30 -outfmt 6
-
-es t3es_pss_hitstable.txt | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2}' | grep -v "Subject" > effectors_in_pss.txt
-
-for x in $(cat effectors_in_pss.txt | grep -Eo '[0-9]+$' | awk '{print "g" $0}'); do
-    cat PSS_up_data.txt | grep -w $x > results_up.txt
-done 
-
-
-####Make a unique table of effectors for each CDS hit with blast % and match length for Pss
+####Make a unique table of effectors for each CDS hit with blast %
 #Create unique CDS list 
-es t3es_pss_hitstable.txt  | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2}' | grep -v "Sub" > unique_cds_all
+es t3es_R15300_hits_table.txt  | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2}' | grep -v "Sub" > unique_cds_all
 #Subset effector hits by cds taking unique + %match + match lenth
 for x in $(cat unique_cds_all); do 
-    cat t3es_pss_hitstable.txt | grep $x | sort | uniq -c | awk '{print $2" "$4"% "$5"bp"}' >> "$x"_unique_hits.txt
+    cat t3es_R15300_hits_table.txt | grep $x | sort | uniq -c | awk '{print $2" "$4"% "$5"bp"}' >> "$x"_unique_hits.txt
 done
-#Begin to creat table 
+#Begine to creat table 
 es unique_cds_all | paste -s > table.txt
 #Paste all data togetger in order of unique_cds_all
 paste $(for x in $(cat unique_cds_all); do echo "$x"_unique_hits.txt; done) >> data 
 #Combine all data
 cat data >> table.txt
+
+####Extract unique hits from l2FC table for plotting 
+for x in $(cat unique_cds_all | grep -Eo '[0-9]+$' | awk '{print "g" $0}'); do
+    cat R15300_all_data.txt | grep -w $x >> effector_l2FC_results.txt
+done 
