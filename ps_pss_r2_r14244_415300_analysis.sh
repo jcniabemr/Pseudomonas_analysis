@@ -227,7 +227,7 @@ es t3es_R15300_hits_table.txt  | cut -f2 | sort | uniq -c | sort -nr | awk '{pri
 for x in $(cat unique_cds_all); do 
     cat t3es_R15300_hits_table.txt | grep $x | sort | uniq -c | awk '{print $2" "$4"% "$5"bp"}' >> "$x"_unique_hits.txt
 done
-#Begine to creat table 
+#Begin to creat table 
 es unique_cds_all | paste -s > table.txt
 #Paste all data togetger in order of unique_cds_all
 paste $(for x in $(cat unique_cds_all); do echo "$x"_unique_hits.txt; done) >> data 
