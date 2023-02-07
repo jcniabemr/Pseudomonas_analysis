@@ -115,12 +115,12 @@ save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022
 
 #Plot heatmap for effectors only 
 
-effector_data <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Pss_deseq/PSS_significantly_upregulated_effectors.txt")
+effector_data <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/R15300_deseq/effector_l2FC_results.txt")
 subset <- effector_data[3]
 colnames(subset) <- ("L2FC")
 row.names(subset) <- effector_data[,1]
 sortedhlfc <- subset[order(subset$L2FC), , drop = FALSE]
-heatmapH <- pheatmap(sortedhlfc, cluster_rows=FALSE, cluster_cols=FALSE, color=colorRampPalette(c("orange", "red"))(50), main = "Pss high l2FC") 
+heatmapH <- pheatmap(sortedhlfc, cluster_rows=FALSE, cluster_cols=FALSE, color=colorRampPalette(c("orange", "red"))(50), main = "R15300 effector expression l2FC") 
 save_pheatmap_pdf <- function(x, filename, width=6, height=10) {
   stopifnot(!missing(x))
   stopifnot(!missing(filename))
@@ -129,4 +129,4 @@ save_pheatmap_pdf <- function(x, filename, width=6, height=10) {
   grid::grid.draw(x$gtable)
   dev.off()
 }
-save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/effectors_in_Pss.pdf")
+save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/R15300_deseq/effectors_in_R15300.pdf")

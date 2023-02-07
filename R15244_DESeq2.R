@@ -1,4 +1,4 @@
-#Deseq2 analysis Pss count data  
+#Deseq2 analysis R15244 count data  
 
 #Set libs
 
@@ -113,23 +113,22 @@ save_pheatmap_pdf <- function(x, filename, width=3, height=25) {
 }
 save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/Heatmap_R15244_l2FC.pdf")
 
+#Plot heatmap for effectors only 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+effector_data <- read.table("C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/R15244_deseq/effector_l2FC_results.txt")
+subset <- effector_data[3]
+colnames(subset) <- ("L2FC")
+row.names(subset) <- effector_data[,1]
+sortedhlfc <- subset[order(subset$L2FC), , drop = FALSE]
+heatmapH <- pheatmap(sortedhlfc, cluster_rows=FALSE, cluster_cols=FALSE, color=colorRampPalette(c("blue","orange", "red"))(50), main = "R15244 effector l2FC") 
+save_pheatmap_pdf <- function(x, filename, width=6, height=10) {
+  stopifnot(!missing(x))
+  stopifnot(!missing(filename))
+  pdf(filename, width=width, height=height)
+  grid::grid.newpage()
+  grid::grid.draw(x$gtable)
+  dev.off()
+}
+save_pheatmap_pdf(heatmapH, "C:/Users/john.connell/Documents/Bioinformatics_2022/projects/andrea_rna_seq/R15244_deseq/effectors_in_R15244.pdf")
 
 
