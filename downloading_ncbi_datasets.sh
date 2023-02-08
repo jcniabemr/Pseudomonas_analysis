@@ -10,9 +10,11 @@ conda create -n ncbi_datasets ncbi-datasets-cli -y
 #Then move to the desired download location
 #Here i download 2700 genome with the following command 
 datasets download genome taxon 'Pseudomonas syringae group' 
-
+#For individual genome use 
+datasets download genome accession "GCA_example"
+#Download only CDS for eg transcript counting
+datasets download genome accession "GCA_example" --include cds
 #If this will take a considerable amount of time you may want to first run a screen session and request resources as below  
-
 screen -S download_ncbi_data
 #then
-srun --partition=medium --cpus-per-task=8 --mem=16G --pty bash 
+srun --partition=medium --cpus-per-task=4 --mem=8G --pty bash 
