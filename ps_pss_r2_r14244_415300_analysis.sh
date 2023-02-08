@@ -168,7 +168,8 @@
 
 
 #R2leaf 
-for strain in RNA_4 RNA_6 RNA_10_2607  RNA_17 RNA_23 RNA_24; do 
+for strain in RNA_10_2607 RNA_24 RNA_6 RNA_17 RNA_23 RNA_4; do 
+#Transcriptome=/home/jconnell/andrea_rna_seq/ref_genomes/GCF_002905795.2/ncbi_dataset/data/GCF_002905795.2/cds_from_genomic.fna
 Transcriptome=/home/jconnell/andrea_rna_seq/ref_genomes/R2Leaf_genebank_seq/ncbi_dataset/data/GCA_002905875.2/cds_from_genomic.fna
     for RawData in /home/jconnell/niab/andrea_rna_seq/decontaminated_reads/$strain; do
         index=/home/jconnell/niab/johnc/transcripts_index
@@ -214,18 +215,26 @@ done
 #     done
 # done
 
+
+####Create TX2GENE file 
+cds=/home/jconnell/andrea_rna_seq/ref_genomes/R2Leaf_genebank_seq/ncbi_dataset/data/GCA_002905875.2/cds_from_genomic.fna
+cat $cds | grep ">" | awk '{print $1}' | sed 's/>//g' > trans
+cat $cds | grep ">" |  awk '{print $1}' | grep -Eo '[0-9]+$' | awk '{print "g"$0}' > gene_names
+paste trans gene_names > tx2gene.txt
+rm trans gene_names
+
 ####Blast effectors agaisnt genome and extract from DEG data 
 #Create blast nucelotide database of CDS file 
-makeblastdb -in cds_from_genomic.fna -parse_seqids -blastdb_version 5  -out R15244_DB/R15244 -dbtype nucl 
+makeblastdb -in cds_from_genomic.fna -parse_seqids -blastdb_version 5  -out R2Leaf_DB/R2Leaf -dbtype nucl 
 #Run blast of type 3 effectors against database 
-tblastn -query t3es.fasta -db R15244_DB/R15244 -out t3es_R15244_hits_table.txt -evalue 1e-30 -outfmt 6
+tblastn -query t3es.fasta -db R2Leaf_DB/R2Leaf -out t3es_R2leaf_hits_table.txt -evalue 1e-30 -outfmt 6
 
 ####Make a unique table of effectors for each CDS hit with blast %
 #Create unique CDS list 
-es t3es_R15244_hits_table.txt  | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2}' | grep -v "Sub" > unique_cds_all
+es t3es_R2leaf_hits_table.txt  | cut -f2 | sort | uniq -c | sort -nr | awk '{print $2}' | grep -v "Sub" > unique_cds_all
 #Subset effector hits by cds taking unique + %match + match lenth
 for x in $(cat unique_cds_all); do 
-    cat t3es_R15244_hits_table.txt | grep $x | sort | uniq -c | awk '{print $2" "$4"% "$5"bp"}' >> "$x"_unique_hits.txt
+    cat t3es_R2leaf_hits_table.txt | grep $x | sort | uniq -c | awk '{print $2" "$4"% "$5"bp"}' >> "$x"_unique_hits.txt
 done
 #Begin to creat table 
 es unique_cds_all | paste -s > table.txt
@@ -236,5 +245,5 @@ cat data >> table.txt
 
 ####Extract unique hits from l2FC table for plotting 
 for x in $(cat unique_cds_all | grep -Eo '[0-9]+$' | awk '{print "g" $0}'); do
-    cat R15244_all_data.txt | grep -w $x >> effector_l2FC_results.txt
+    cat R2Leaf_all_data.txt | grep -w $x >> effector_l2FC_results.txt
 done 
