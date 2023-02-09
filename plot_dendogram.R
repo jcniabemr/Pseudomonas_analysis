@@ -1,5 +1,7 @@
 #!/usr/bin/env R
 
+#Script to quickly plot dendogram from pyani tsv output 
+
 library(optparse)
 
 option_list = list(
