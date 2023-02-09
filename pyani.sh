@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-#SBATCH --mem=50G
 #SBATCH -p long
 #SBATCH -J pyani
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=64
+#SBATCH --mem=64G
+#SBATCH -N 1 
+#SBATCH --ntasks-per-node=1
+
 
 #Calculate ANI for a set of genome assemblies 
 
@@ -12,6 +15,6 @@ outdir=$2
 average_nucleotide_identity.py \
 -i $genome_dir \
 -o $outdir \
--m ANIm \
--g 
+-m ANIm 
+
 
