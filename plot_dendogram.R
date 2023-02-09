@@ -1,6 +1,7 @@
 #!/usr/bin/env R
 
-#Script to quickly plot dendogram from pyani tsv output 
+####Script to quickly plot dendogram from pyani tsv output 
+####Only required argument is <-i/--i> for the tsv infile however other argumens such as labs, method and filename can be set 
 
 library(optparse)
 
