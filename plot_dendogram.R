@@ -1,4 +1,4 @@
-#!/usr/bin/env R
+#!/usr/bin/env Rscript 
 
 ####Script to quickly plot dendogram from pyani tsv output 
 ####Only required argument is <-i/--i> for the tsv infile however other argumens such as labs, method and filename can be set 
@@ -7,7 +7,7 @@ library(optparse)
 
 option_list = list(
   make_option(c("-i","--i"), help="infile name"), 
-  make_option(c("-o","--o"), help="output file name", default="dendogram.png"),
+  make_option(c("-o","--o"), help="output file name", default="dendogram"),
   make_option(c("-t","--t"), help="title", default="Dendogram"),
   make_option(c("-x","--x"), help="x lab", default="Genome Assembly"),
   make_option(c("-y","--y"), help="y lab", default="Height"),
@@ -27,6 +27,6 @@ method <- paste("(","method","-",opt$m,")", sep ="")
 filename <- paste(opt$o,".png", sep="")
 jpeg(file=filename)
 plot(cluster, main = opt$t, ylab=opt$y, xlab = opt$x, sub = method)
-dev.off
+
 
 
