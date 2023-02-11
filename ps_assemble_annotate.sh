@@ -189,6 +189,15 @@
 # outdir=/home/jconnell/pseudomonas/Ps_genomes_2795/ncbi_dataset/checkM/storage/filterd_data.txt
 # python $progdir/subset_checkm.py -i $data -o $outdir
 
+####Blast Pseudomonas genomes identified by BLAST against type 3 effector database 
+
+
+
+
+
+
+
+
 
 # ####Run Busco on assembled query genomes
 # for strain in 241278_241370 241185_241277 241464_241556 241371_241463 241557_241649; do
