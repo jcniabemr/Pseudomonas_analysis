@@ -23,12 +23,15 @@ data <- read.table(opt$i, header = T, sep = '\t', fill = TRUE)
 reformed <- apply(data, 2, FUN=function(x) {
 	x[match(data[,1] ,x)]
 	})
-####Switch NA > 0 and transform 
-reformed[is.na(reformed)] <-0
+####Transform data
 final <- t(reformed)
+finalT <- as.data.frame(final)
+####Count NA values to give similarity 
+finalT$na_count <- apply(is.na(finalT), 1, sum)
+F1 <- finalT[order(finalT$na_count, decreasing = FALSE),]
 ####Set name and write table 
 filename <- paste(opt$o,".txt", sep = "")
-write.table(final, file = filename, col.names = FALSE, sep = '\t', quote = FALSE)
+write.table(F1, file = filename, col.names = FALSE, sep = '\t', quote = FALSE)
 
 
 
