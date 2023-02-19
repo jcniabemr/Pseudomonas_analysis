@@ -6,6 +6,7 @@
 #SBATCH -N 1 
 #SBATCH --ntasks-per-node=1
 
+source miniconda3/bin/activate pyani
 
 #Calculate ANI for a set of genome assemblies 
 

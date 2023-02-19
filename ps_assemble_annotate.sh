@@ -290,17 +290,17 @@
 # 	cat blast_results_49_56_63_70_77.txt | grep -v $x > blast_results_49_56_63_70_77_filter.txt
 # done 
 
-# #### Run pyani on reference genomes 
-# filter=$(cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/comp_cont_n50_filter_refgenomes.txt | awk '{print $1}' | cut -d "_" -f1-2)
-# files=/home/jconnell/pseudomonas/Ps_genomes_2795/ncbi_dataset/data
-# temp_files=/mnt/shared/scratch/jconnell/temp_pyani_ref
-# outdir=/home/jconnell/pseudomonas/Ps_genomes_2795/pyani_result
-# mkdir -p $temp_files $outdir
-# #for x in $(echo ${filter}); do
-# #  cp --symbolic ${files}/${x}/*.fna $temp_files
-# #done 
-# scriptdir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
-# sbatch $scriptdir/pyani.sh $temp_files $outdir
+#### Run pyani on reference genomes 
+filter=$(cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/comp_cont_n50_filter_refgenomes.txt | awk '{print $1}' | cut -d "_" -f1-2)
+files=/home/jconnell/pseudomonas/Ps_genomes_2795/ncbi_dataset/data
+temp_files=/mnt/shared/scratch/jconnell/temp_pyani_ref
+outdir=/mnt/shared/scratch/jconnell/2795_pyani_result
+mkdir -p $temp_files $outdir
+for x in $(echo ${filter}); do
+ cp --symbolic ${files}/${x}/*.fna $temp_files
+done 
+scriptdir=/home/jconnell/git_repos/niab_repos/pseudomonas_analysis
+sbatch $scriptdir/pyani.sh $temp_files $outdir
 
 ####Filter checkM on query genomes 
 # data=/home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequencing/pseudomonas_data/49_56_63_70_77_checkM/storage/test
