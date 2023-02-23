@@ -295,7 +295,7 @@ filter=$(cat /home/jconnell/pseudomonas/pseudomonas_syringae_additional_sequenci
 files=/home/jconnell/pseudomonas/Ps_genomes_2795/ncbi_dataset/data
 temp_files=/mnt/shared/scratch/jconnell/temp_pyani_ref
 outdir=/mnt/shared/scratch/jconnell/2795_pyani_result
-mkdir -p $temp_files $outdir
+mkdir -p $temp_files
 for x in $(echo ${filter}); do
  cp --symbolic ${files}/${x}/*.fna $temp_files
 done 
